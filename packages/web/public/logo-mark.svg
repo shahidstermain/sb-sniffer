@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGlow" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#1c2024" />
+      <stop offset="100%" stop-color="#0a0b0d" />
+    </radialGradient>
+
+    <!-- Supabase Emerald Gradient -->
+    <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3ECF8E" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Cyan Pulse Accent -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3ECF8E" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+
+    <!-- Subdued Platter Gradient -->
+    <linearGradient id="platterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2a3038" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#181c20" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="emeraldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <filter id="subtleGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base Container -->
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#bgGlow)" stroke="#262c33" stroke-width="2" />
+
+  <!-- Inner Soft Bevel Highlight -->
+  <rect x="3" y="3" width="114" height="114" rx="27" fill="none" stroke="white" stroke-opacity="0.06" stroke-width="1.5" />
+
+  <!-- Ambient Radar Aura -->
+  <circle cx="60" cy="60" r="38" stroke="#3ECF8E" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="3 3" />
+  <circle cx="60" cy="60" r="26" stroke="#3ECF8E" stroke-opacity="0.14" stroke-width="1" />
+  <circle cx="60" cy="60" r="14" stroke="#3ECF8E" stroke-opacity="0.2" stroke-width="1" />
+
+  <!-- Radar Sweep Cone -->
+  <path d="M 60,60 L 86,34 A 38 38 0 0 0 46,24 Z" fill="url(#cyanGrad)" fill-opacity="0.07" />
+
+  <!-- Database Cylinder Stack (3 Layered Discs) -->
+  <!-- Top Platter Rim -->
+  <ellipse cx="60" cy="40" rx="30" ry="9" fill="url(#platterGrad)" stroke="#3ECF8E" stroke-opacity="0.35" stroke-width="1.5" />
+
+  <!-- Mid Platter Arc -->
+  <path d="M 30,58 A 30 9 0 0 0 90,58" fill="none" stroke="#3a444f" stroke-width="1.5" stroke-dasharray="2 2" />
+  <path d="M 30,58 A 30 9 0 0 0 74,66" fill="none" stroke="#3ECF8E" stroke-opacity="0.25" stroke-width="1.5" />
+
+  <!-- Bottom Platter Arc -->
+  <path d="M 30,76 A 30 9 0 0 0 90,76" fill="none" stroke="#2a323a" stroke-width="1.5" />
+
+  <!-- Cylinder Connecting Side Struts -->
+  <line x1="30" y1="40" x2="30" y2="76" stroke="#2e3740" stroke-width="1.5" />
+  <line x1="90" y1="40" x2="90" y2="76" stroke="#2e3740" stroke-width="1.5" />
+
+  <!-- Primary Stylized "S" + Diagnostic Pulse Telemetry Waveform -->
+  <!-- This dynamic vector weaves across the database stack forming an iconic energetic 'S' sniffer pulse -->
+  <path d="M 76,33 
+           C 66,28 46,31 43,41 
+           C 40,51 54,54 64,57 
+           C 76,60 81,67 77,77 
+           C 73,87 50,89 40,83" 
+        fill="none" 
+        stroke="url(#emeraldGrad)" 
+        stroke-width="5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#emeraldGlow)" />
+
+  <!-- Heartbeat / Telemetry Diagnostic Spike penetrating through center -->
+  <path d="M 40,58 L 51,58 L 56,43 L 64,72 L 70,58 L 80,58" 
+        fill="none" 
+        stroke="#FFFFFF" 
+        stroke-width="2.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Glowing Focal Pinhead / Sensor Spark -->
+  <circle cx="56" cy="43" r="3" fill="#38BDF8" filter="url(#subtleGlow)" />
+  <circle cx="56" cy="43" r="1.5" fill="#FFFFFF" />
+
+  <!-- Status Ping Indicator (Top Right) -->
+  <circle cx="95" cy="25" r="4" fill="#3ECF8E" filter="url(#emeraldGlow)" />
+  <circle cx="95" cy="25" r="2" fill="#FFFFFF" />
+</svg>

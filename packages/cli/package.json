@@ -1,0 +1,31 @@
+{
+  "name": "sb-sniffer",
+  "version": "1.0.0",
+  "description": "CLI Diagnostic & Health Sniffer for Supabase projects",
+  "bin": {
+    "sb-sniffer": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/tests/**/*.test.js",
+    "prepublishOnly": "npm run build",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@sb-sniffer/core": "*",
+    "commander": "^13.1.0",
+    "pg": "^8.13.1",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@types/pg": "^8.11.11",
+    "typescript": "^5.7.3"
+  }
+}

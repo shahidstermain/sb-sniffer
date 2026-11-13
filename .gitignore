@@ -1,0 +1,14 @@
+node_modules
+dist
+.DS_Store
+*.log
+coverage
+.env
+.env.*
+!.env.example
+supabase/.temp
+*.tsbuildinfo
+
+# Local-only career prep and launch drafts (kept out of public git history)
+SUPABASE_CAREER_POSITIONING.md
+docs/LAUNCH_AND_GROWTH.md

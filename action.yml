@@ -1,0 +1,36 @@
+name: 'SB Sniffer — Supabase Full-Stack Diagnostics'
+description: 'Analyze Supabase migrations, Postgres schemas, and app code for RLS, Supavisor, Egress, and Splinter security issues.'
+inputs:
+  schema-path:
+    description: 'Path to SQL schema dump or supabase/migrations directory'
+    required: false
+    default: 'supabase/migrations'
+  app-dir:
+    description: 'Path to application codebase (.env, Next.js, Prisma, Drizzle)'
+    required: false
+    default: '.'
+  fail-on:
+    description: 'Severity threshold to fail CI (critical, high, medium)'
+    required: false
+    default: 'critical'
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    - name: Install and Build SB Sniffer Action
+      shell: bash
+      run: |
+        cd "${{ github.action_path }}"
+        npm ci --ignore-scripts
+        npm run build --workspace=@sb-sniffer/core
+        npm run build --workspace=sb-sniffer
+    - name: Run SB Sniffer
+      shell: bash
+      run: |
+        node "${{ github.action_path }}/packages/cli/dist/index.js" analyze \
+          --schema "${{ inputs.schema-path }}" \
+          --app "${{ inputs.app-dir }}" \
+          --fail-on "${{ inputs.fail-on }}"

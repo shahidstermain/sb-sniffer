@@ -1,0 +1,32 @@
+{
+  "name": "supabase-diagnostic-health-sniffer",
+  "version": "1.0.0",
+  "description": "Open-Source Diagnostic & Health Sniffer for Supabase Projects",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@sb-sniffer/core && npm run build --workspace=sb-sniffer && npm run build --workspace=@sb-sniffer/web",
+    "typecheck": "npm run typecheck --workspace=@sb-sniffer/core && npm run typecheck --workspace=sb-sniffer && npm run typecheck --workspace=@sb-sniffer/web",
+    "test": "npm test --workspace=@sb-sniffer/core && npm test --workspace=sb-sniffer",
+    "dev:web": "npm run dev --workspace=@sb-sniffer/web",
+    "build:web": "npm run build --workspace=@sb-sniffer/web",
+    "cli": "node packages/cli/dist/index.js",
+    "web": "node packages/cli/dist/index.js web",
+    "gui": "node packages/cli/dist/index.js web",
+    "serve": "node packages/cli/dist/index.js serve",
+    "install:global": "./install.sh"
+  },
+  "keywords": [
+    "supabase",
+    "postgres",
+    "database-linter",
+    "rls",
+    "supavisor",
+    "healthcheck",
+    "diagnostics"
+  ],
+  "author": "",
+  "license": "MIT"
+}

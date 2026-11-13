@@ -1,6 +1,6 @@
 {
   "name": "supabase-diagnostic-health-sniffer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Open-Source Diagnostic & Health Sniffer for Supabase Projects",
   "private": true,
   "workspaces": [

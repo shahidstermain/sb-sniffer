@@ -12,7 +12,7 @@
   <a href="https://shahidstermain.github.io/sb-sniffer/">
     <img src="https://img.shields.io/badge/Live_Demo-Try_in_Browser-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Live Interactive Demo" />
   </a>
-  <a href="https://github.com/shahidstermain/sb-sniffer/releases/tag/v1.0.0">
+  <a href="https://github.com/shahidstermain/sb-sniffer/releases/tag/v1.0.1">
     <img src="https://img.shields.io/github/v/release/shahidstermain/sb-sniffer?style=for-the-badge&color=38BDF8" alt="Latest Release" />
   </a>
   <a href="LICENSE">
@@ -231,7 +231,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: shahidstermain/sb-sniffer@v1.0.0
+      - uses: shahidstermain/sb-sniffer@v1.0.1
         with:
           schema-path: supabase/migrations
           app-dir: .

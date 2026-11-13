@@ -4,6 +4,17 @@ All notable changes to SB Sniffer will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-11-13
+
+### Added
+- **IPv4 Supavisor Session Mode (`:5432`)**: Added `Port 5432 (Supavisor Session · IPv4)` option in the Web Live Connection modal and `/api/connect` bridge (`pooler_session`) for networks without outbound IPv6 routing.
+- **GitHub Pages Demo & Social Assets**: Configured Vite relative asset base (`./`) for live static browser hosting, added `CITATION.cff`, and added custom `assets/social-preview.svg` / `1280×640` `assets/social-preview.png` banner assets.
+- **Smart Upload Auto-Detection (`DumpUploader`)**: Automatically detects pasted SQL vs JSON and `.sql` / `.csv` / `.json` file uploads, warns when the Studio Introspection SQL query itself is pasted before execution, and replaces blocking `alert()` popups with inline error banners.
+
+### Fixed
+- **IPv6 Direct Host Diagnostics (`pgCollector`)**: `formatPgConnectionError()` now catches `EHOSTUNREACH` / `ENETUNREACH` against IPv6-only `db.<ref>.supabase.co` hosts and surfaces clear guidance to switch to an IPv4-compatible Supavisor Pooler URI or Zero-Credential Studio Mode.
+- **Live Bridge Error Clarity**: Stopped appending the misleading `'sb-sniffer serve'` tip onto real PostgreSQL authentication/network errors returned by a running bridge server.
+
 ## [1.0.0] - 2026-11-13
 
 ### Added

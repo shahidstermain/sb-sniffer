@@ -1,6 +1,6 @@
 {
   "name": "sb-sniffer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI Diagnostic & Health Sniffer for Supabase projects",
   "bin": {
     "sb-sniffer": "./dist/index.js"

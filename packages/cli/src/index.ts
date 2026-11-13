@@ -40,7 +40,7 @@ const program = new Command();
 program
   .name('sb-sniffer')
   .description('Supabase Diagnostic & Health Sniffer — Flags the top Supabase support bottlenecks')
-  .version('1.0.0');
+  .version('1.0.1');
 
 // Command: analyze
 program

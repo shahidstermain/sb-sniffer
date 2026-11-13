@@ -86,7 +86,7 @@ export function startMcpServer(): void {
         result: {
           protocolVersion: '2024-11-05',
           capabilities: { tools: {} },
-          serverInfo: { name: 'sb-sniffer', version: '1.0.0' },
+          serverInfo: { name: 'sb-sniffer', version: '1.0.1' },
         },
       });
       return;

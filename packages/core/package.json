@@ -1,0 +1,30 @@
+{
+  "name": "@sb-sniffer/core",
+  "version": "1.0.0",
+  "description": "Core diagnostic engine and parsers for Supabase Health Sniffer",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "test": "node --test dist/tests/**/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "pgsql-ast-parser": "^12.0.2"
+  }
+}

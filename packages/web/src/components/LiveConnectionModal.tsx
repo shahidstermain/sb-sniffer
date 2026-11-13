@@ -35,9 +35,13 @@ export const LiveConnectionModal: React.FC<Props> = ({
   const [password, setPassword] = useState('');
   const [region, setRegion] = useState('aws-0-ap-northeast-1');
   const [customRegion, setCustomRegion] = useState('');
-  const [poolerMode, setPoolerMode] = useState<'pooler' | 'direct'>('pooler');
+  const [poolerMode, setPoolerMode] = useState<'pooler' | 'pooler_session' | 'direct'>('pooler');
   const [connectionUri, setConnectionUri] = useState('');
-  const [bridgeUrl, setBridgeUrl] = useState('http://localhost:3001');
+  const [bridgeUrl, setBridgeUrl] = useState(() =>
+    typeof window !== 'undefined' && window.location.port === '3001'
+      ? window.location.origin
+      : 'http://127.0.0.1:3001'
+  );
 
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -68,11 +72,18 @@ export const LiveConnectionModal: React.FC<Props> = ({
         payload.connectionString = connectionUri.trim();
       }
 
-      const res = await fetch(`${bridgeUrl}/api/connect`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+      try {
+        res = await fetch(`${bridgeUrl.replace(/\/+$/, '')}/api/connect`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      } catch {
+        throw new Error(
+          `Could not reach local Live Bridge Server at ${bridgeUrl}. Run 'sb-sniffer serve' in your terminal first.`
+        );
+      }
 
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -88,7 +99,7 @@ export const LiveConnectionModal: React.FC<Props> = ({
     } catch (err: any) {
       setStatusMsg({
         type: 'error',
-        text: `${err.message} (Tip: Run 'sb-sniffer serve' in terminal to run the local live bridge)`,
+        text: err?.message || 'Connection failed.',
       });
     } finally {
       setLoading(false);
@@ -237,8 +248,9 @@ export const LiveConnectionModal: React.FC<Props> = ({
                     onChange={(e) => setPoolerMode(e.target.value as any)}
                     className="w-full bg-[#121214] border border-zinc-700/60 rounded-lg px-3 py-2 text-zinc-300 text-xs focus:outline-none focus:border-emerald-500"
                   >
-                    <option value="pooler">Port 6543 (Supavisor Tx Mode)</option>
-                    <option value="direct">Port 5432 (Direct Session Mode)</option>
+                    <option value="pooler">Port 6543 (Supavisor Tx Mode · IPv4)</option>
+                    <option value="pooler_session">Port 5432 (Supavisor Session · IPv4)</option>
+                    <option value="direct">Port 5432 (Direct Host · IPv6 Only)</option>
                   </select>
                 </div>
               </div>

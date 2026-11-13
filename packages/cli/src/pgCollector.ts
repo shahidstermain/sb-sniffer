@@ -78,6 +78,31 @@ export function createPgClientConfig(connectionString: string, timeoutMs = 10000
   };
 }
 
+/**
+ * Formats low-level pg connection errors with actionable Supabase/Supavisor guidance
+ * (especially IPv6-only direct db.<ref>.supabase.co EHOSTUNREACH on IPv4-only networks).
+ */
+export function formatPgConnectionError(err: any, connectionString: string): Error {
+  const code = err?.code || '';
+  const msg = String(err?.message || err || 'Database connection failed.');
+  const isUnreachable =
+    code === 'EHOSTUNREACH' ||
+    code === 'ENETUNREACH' ||
+    /EHOSTUNREACH|ENETUNREACH/i.test(msg);
+  const isDirectSupabase = /db\.[a-z0-9]+\.supabase\.co/i.test(connectionString);
+
+  if (isUnreachable && (isDirectSupabase || /:\d{4}\s*-?\s*Local/i.test(msg) || /[0-9a-f]{4}:[0-9a-f]{4}:/i.test(msg))) {
+    return new Error(
+      `Network cannot reach Supabase direct host over IPv6 (${code || 'EHOSTUNREACH'}). ` +
+        `Direct DB hosts (db.<ref>.supabase.co) are IPv6-only without the IPv4 add-on. ` +
+        `Use your IPv4-compatible Supavisor Pooler URI instead (Supabase Dashboard -> Connect -> Session Pooler port 5432 or Transaction Pooler port 6543, e.g. aws-0-<region>.pooler.supabase.com), ` +
+        `or run Zero-Credential Studio Mode.`
+    );
+  }
+
+  return err instanceof Error ? err : new Error(msg);
+}
+
 export async function collectLiveSnapshot(options: CollectorOptions): Promise<DiagnosticSnapshot> {
   const { connectionString, timeoutMs = 10000 } = options;
 
@@ -85,7 +110,11 @@ export async function collectLiveSnapshot(options: CollectorOptions): Promise<Di
   const client = new pg.Client(createPgClientConfig(connectionString, timeoutMs));
 
   try {
-    await client.connect();
+    try {
+      await client.connect();
+    } catch (connErr: any) {
+      throw formatPgConnectionError(connErr, connectionString);
+    }
 
     // Enforce session-level read-only so all subsequent queries cannot mutate state
     await client.query('SET SESSION CHARACTERISTICS AS TRANSACTION READ ONLY;');

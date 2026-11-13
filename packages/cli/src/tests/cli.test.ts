@@ -4,7 +4,7 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { spawnSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { createPgClientConfig, normalizeConnectionString } from '../pgCollector.js';
+import { createPgClientConfig, formatPgConnectionError, normalizeConnectionString } from '../pgCollector.js';
 import { createLiveBridgeHandler } from '../liveServer.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -32,6 +32,16 @@ test('createPgClientConfig disables SSL for localhost and enables SSL for remote
 
   const strictCfg = createPgClientConfig('postgresql://postgres.abc:pass@db.abc.supabase.co:5432/postgres?sslmode=verify-full');
   assert.deepEqual(strictCfg.ssl, { rejectUnauthorized: true });
+});
+
+test('formatPgConnectionError explains IPv6-only Supabase direct hosts on EHOSTUNREACH', () => {
+  const err = Object.assign(
+    new Error('connect EHOSTUNREACH 2406:da14:1d62:b400::1:5432 - Local (:::61417)'),
+    { code: 'EHOSTUNREACH' }
+  );
+  const formatted = formatPgConnectionError(err, 'postgresql://postgres:secret@db.abc123.supabase.co:5432/postgres');
+  assert.match(formatted.message, /IPv6-only/i);
+  assert.match(formatted.message, /Supavisor Pooler/i);
 });
 
 test('CLI demo --format json outputs valid report with findings', () => {

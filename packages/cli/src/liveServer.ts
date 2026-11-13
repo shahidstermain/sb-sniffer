@@ -254,7 +254,7 @@ export function createLiveBridgeHandler(options: LiveServerOptions = {}): http.R
 
         // If user provided projectRef + password + region
         if (!connectionString && payload.projectRef && payload.password) {
-          const mode = payload.mode || 'pooler'; // pooler (6543) or direct (5432)
+          const mode = payload.mode || 'pooler'; // pooler (6543), pooler_session (5432 IPv4), or direct (5432 IPv6)
           let formattedRegion = String(payload.region || 'aws-0-us-east-1').trim();
           if (!formattedRegion.startsWith('aws-0-') && !formattedRegion.startsWith('aws-1-') && !formattedRegion.includes('.')) {
             formattedRegion = `aws-0-${formattedRegion}`;
@@ -264,6 +264,8 @@ export function createLiveBridgeHandler(options: LiveServerOptions = {}): http.R
 
           if (mode === 'pooler') {
             connectionString = `postgresql://postgres.${cleanRef}:${encodedPassword}@${formattedRegion}.pooler.supabase.com:6543/postgres`;
+          } else if (mode === 'pooler_session') {
+            connectionString = `postgresql://postgres.${cleanRef}:${encodedPassword}@${formattedRegion}.pooler.supabase.com:5432/postgres`;
           } else {
             connectionString = `postgresql://postgres:${encodedPassword}@db.${cleanRef}.supabase.co:5432/postgres`;
           }

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="25%" cy="20%" r="85%">
+      <stop offset="0%" stop-color="#132920" />
+      <stop offset="55%" stop-color="#0b0d10" />
+      <stop offset="100%" stop-color="#07080a" />
+    </radialGradient>
+    <linearGradient id="emerald" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3ECF8E" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#3ECF8E" stroke-opacity="0.06" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)" />
+  <rect width="1280" height="640" fill="url(#grid)" />
+
+  <!-- Open Source Pill -->
+  <rect x="72" y="74" width="318" height="36" rx="18" fill="#3ECF8E" fill-opacity="0.14" stroke="#3ECF8E" stroke-opacity="0.4" />
+  <text x="231" y="97" text-anchor="middle" fill="#3ECF8E" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.2">OPEN SOURCE · MIT · TYPESCRIPT</text>
+
+  <!-- Brand Icon -->
+  <g transform="translate(72, 138)">
+    <rect x="2" y="2" width="96" height="96" rx="22" fill="#12161a" stroke="#262c33" stroke-width="2" />
+    <ellipse cx="50" cy="34" rx="24" ry="7" fill="#1c2228" stroke="#3ECF8E" stroke-opacity="0.4" stroke-width="1.5" />
+    <path d="M 26,49 A 24 7 0 0 0 74,49" fill="none" stroke="#3a444f" stroke-width="1.5" stroke-dasharray="2 2" />
+    <path d="M 26,64 A 24 7 0 0 0 74,64" fill="none" stroke="#2a323a" stroke-width="1.5" />
+    <line x1="26" y1="34" x2="26" y2="64" stroke="#2e3740" stroke-width="1.5" />
+    <line x1="74" y1="34" x2="74" y2="64" stroke="#2e3740" stroke-width="1.5" />
+    <path d="M 63,28 C 54,24 38,27 36,35 C 34,43 45,45 53,48 C 63,50 67,56 64,64 C 60,72 42,74 34,69" fill="none" stroke="url(#emerald)" stroke-width="4.5" stroke-linecap="round" />
+    <path d="M 33,49 L 42,49 L 47,36 L 53,61 L 58,49 L 67,49" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="80" cy="21" r="4" fill="#3ECF8E" />
+  </g>
+
+  <!-- Title -->
+  <text x="192" y="182" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="60" font-weight="800" letter-spacing="-1">SB <tspan fill="#3ECF8E">Sniffer</tspan></text>
+  <text x="194" y="220" fill="#94A3B8" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="500">Full-Stack Supabase &amp; PostgreSQL Diagnostics</text>
+
+  <!-- Value Prop -->
+  <text x="72" y="294" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="500">Catch RLS bottlenecks, Supavisor :6543 crashes, and</text>
+  <text x="72" y="328" fill="#E2E8F0" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="22" font-weight="500">unindexed PostgREST filters before production incidents.</text>
+
+  <!-- Feature Chips Row 1 -->
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#E2E8F0">
+    <rect x="72" y="384" width="164" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="154" y="410" text-anchor="middle">14 Core Checks</text>
+
+    <rect x="250" y="384" width="140" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="320" y="410" text-anchor="middle">RLS initPlan</text>
+
+    <rect x="404" y="384" width="168" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="488" y="410" text-anchor="middle">Supavisor :6543</text>
+
+    <rect x="586" y="384" width="156" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="664" y="410" text-anchor="middle">Splinter Parity</text>
+  </g>
+
+  <!-- Feature Chips Row 2 -->
+  <g font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif" font-size="16" font-weight="600" fill="#E2E8F0">
+    <rect x="72" y="438" width="196" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="170" y="464" text-anchor="middle">CONCURRENTLY Fix</text>
+
+    <rect x="282" y="438" width="198" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="381" y="464" text-anchor="middle">Pentest &amp; EXPLAIN</text>
+
+    <rect x="494" y="438" width="142" height="40" rx="10" fill="#FFFFFF" fill-opacity="0.06" stroke="#FFFFFF" stroke-opacity="0.14" />
+    <text x="565" y="464" text-anchor="middle">MCP Server</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="72" y="556" fill="#64748B" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">github.com/shahidstermain/sb-sniffer</text>
+
+  <!-- Right Terminal Card -->
+  <rect x="794" y="76" width="414" height="488" rx="20" fill="#101318" stroke="#262D38" stroke-width="2" />
+  <circle cx="824" cy="106" r="6" fill="#EF4444" />
+  <circle cx="844" cy="106" r="6" fill="#F59E0B" />
+  <circle cx="864" cy="106" r="6" fill="#22C55E" />
+
+  <text x="822" y="150" fill="#38BDF8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">$ sb-sniffer <tspan fill="#94A3B8">analyze -s schema.sql</tspan></text>
+
+  <rect x="822" y="174" width="358" height="84" rx="12" fill="#EF4444" fill-opacity="0.12" stroke="#EF4444" stroke-opacity="0.35" />
+  <text x="842" y="204" fill="#FCA5A5" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="700">HEALTH SCORE</text>
+  <text x="842" y="238" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="28" font-weight="800">28 / 100 · Grade F</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14">
+    <text x="822" y="294" fill="#F87171" font-weight="700">[CRITICAL] <tspan fill="#CBD5E1" font-weight="400">Unwrapped auth.uid()</tspan></text>
+    <text x="822" y="324" fill="#F87171" font-weight="700">[CRITICAL] <tspan fill="#CBD5E1" font-weight="400">Public table missing RLS</tspan></text>
+    <text x="822" y="354" fill="#FB923C" font-weight="700">[HIGH]     <tspan fill="#CBD5E1" font-weight="400">Unindexed foreign key</tspan></text>
+    <text x="822" y="384" fill="#FACC15" font-weight="700">[MEDIUM]   <tspan fill="#CBD5E1" font-weight="400">Missing REPLICA IDENTITY</tspan></text>
+
+    <line x1="822" y1="414" x2="1180" y2="414" stroke="#1E2530" />
+
+    <text x="822" y="448" fill="#38BDF8">$ sb-sniffer <tspan fill="#94A3B8">fix --dry-run</tspan></text>
+    <text x="822" y="484" fill="#3ECF8E" font-weight="700">✓ CREATE INDEX CONCURRENTLY</text>
+    <text x="822" y="512" fill="#3ECF8E" font-weight="700">✓ ALTER POLICY (select auth.uid())</text>
+    <text x="822" y="540" fill="#3ECF8E" font-weight="700">✓ ENABLE ROW LEVEL SECURITY</text>
+  </g>
+</svg>

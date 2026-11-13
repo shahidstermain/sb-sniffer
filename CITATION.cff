@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+title: "SB Sniffer: Full-Stack Diagnostic, Security & Performance Sniffer for Supabase and PostgreSQL"
+message: "If you use SB Sniffer in technical audits, research, or tooling, please cite it using this metadata."
+type: software
+authors:
+  - family-names: "Moosa"
+    given-names: "Shahid"
+repository-code: "https://github.com/shahidstermain/sb-sniffer"
+url: "https://shahidstermain.github.io/sb-sniffer/"
+license: MIT
+version: "1.0.0"
+date-released: "2026-11-13"
+keywords:
+  - supabase
+  - postgresql
+  - row-level-security
+  - supavisor
+  - database-diagnostics
+  - mcp-server

@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build, Typecheck & Test
+        run: npm run build && npm run typecheck && npm test
+
+      - name: Create release tarball
+        run: |
+          mkdir -p release-artifacts
+          tar -czf release-artifacts/sb-sniffer-${{ github.ref_name }}.tar.gz \
+            package.json package-lock.json action.yml install.sh LICENSE README.md \
+            packages/core/package.json packages/core/dist \
+            packages/cli/package.json packages/cli/dist \
+            packages/web/package.json packages/web/dist
+          sha256sum release-artifacts/sb-sniffer-${{ github.ref_name }}.tar.gz > release-artifacts/sb-sniffer-${{ github.ref_name }}.tar.gz.sha256
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            release-artifacts/* \
+            --title "SB Sniffer ${{ github.ref_name }}" \
+            --generate-notes

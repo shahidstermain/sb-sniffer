@@ -1,0 +1,41 @@
+name: SB Sniffer — Supabase Full-Stack CI Gate
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'src/**'
+      - '.env*'
+
+jobs:
+  sb-sniffer-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install & Build SB Sniffer
+        run: npm ci && npm run build --workspace=@sb-sniffer/core && npm run build --workspace=sb-sniffer
+
+      - name: Run Full-Stack Supabase Diagnostics
+        run: |
+          if compgen -G "supabase/migrations/*.sql" > /dev/null; then
+            node packages/cli/dist/index.js analyze \
+              --schema supabase/migrations \
+              --app . \
+              --format markdown \
+              --out sb-sniffer-report.md \
+              --fail-on critical
+          else
+            echo "No SQL migration files in supabase/migrations; running app-only scan."
+            node packages/cli/dist/index.js analyze \
+              --app . \
+              --format markdown \
+              --out sb-sniffer-report.md \
+              --fail-on critical
+          fi

@@ -1,9 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import { Readable } from 'node:stream';
 import { spawnSync, spawn } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { createPgClientConfig, formatPgConnectionError, normalizeConnectionString } from '../pgCollector.js';
 import { createLiveBridgeHandler } from '../liveServer.js';
 
@@ -95,6 +97,53 @@ test('CLI rejects invalid --format and --fail-on values cleanly', () => {
   );
   assert.equal(badFailOn.status, 1);
   assert.ok(badFailOn.stderr.includes('Invalid --fail-on'));
+});
+
+test('CLI analyze exports SARIF to stdout and a file before applying the severity gate', () => {
+  const args = [CLI_BIN, 'analyze', '--schema', 'sample/schema_dump_broken.sql', '--format', 'sarif'];
+  const res = spawnSync(process.execPath, args, { cwd: REPO_ROOT, encoding: 'utf-8' });
+  assert.equal(res.status, 0, res.stderr);
+  const sarif = JSON.parse(res.stdout);
+  assert.equal(sarif.version, '2.1.0');
+  assert.ok(sarif.runs[0].results.length > 0);
+  assert.equal(sarif.runs[0].results[0].locations[0].physicalLocation.artifactLocation.uri,
+    pathToFileURL(path.join(REPO_ROOT, 'sample/schema_dump_broken.sql')).href);
+  const nested = spawnSync(process.execPath, [CLI_BIN, 'analyze', '--schema', 'schema_dump_broken.sql', '--format', 'sarif'], {
+    cwd: path.join(REPO_ROOT, 'sample'), encoding: 'utf-8',
+  });
+  assert.equal(nested.status, 0, nested.stderr);
+  assert.deepEqual(JSON.parse(nested.stdout), sarif);
+
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sniffer-sarif-'));
+  try {
+    const output = path.join(dir, 'report.sarif');
+    const gated = spawnSync(process.execPath, [...args, '--out', output, '--fail-on', 'info'], {
+      cwd: REPO_ROOT, encoding: 'utf-8',
+    });
+    assert.equal(gated.status, 1);
+    assert.equal(gated.stdout, '');
+    assert.deepEqual(JSON.parse(fs.readFileSync(output, 'utf-8')), sarif);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('SARIF mixed schema and statistics input does not attribute all results to the schema', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sniffer-sarif-stats-'));
+  try {
+    const stats = path.join(dir, 'stats.json');
+    fs.writeFileSync(stats, '[]');
+    const result = spawnSync(process.execPath, [CLI_BIN, 'analyze', '--schema', 'sample/schema_dump_broken.sql', '--stats', stats, '--format', 'sarif'], {
+      cwd: REPO_ROOT, encoding: 'utf-8',
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const results = JSON.parse(result.stdout).runs[0].results;
+    assert.ok(results.length > 0);
+    assert.ok(results.every((r: { locations?: { physicalLocation?: unknown }[] }) =>
+      !r.locations?.some((location) => location.physicalLocation)));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test('CLI fix --dry-run emits CONCURRENTLY SQL', () => {

@@ -209,7 +209,7 @@ Running `node packages/cli/dist/index.js analyze --schema sample/schema_dump_bro
 
 | Command | Purpose | Key Flags |
 |---|---|---|
-| `analyze` | Audit schema dump, migrations dir, app code, Studio JSON, or live DB | `-s/--schema`, `-a/--app`, `-d/--db`, `--studio-json`, `--stats`, `-f/--format (terminal\|json\|markdown\|sql\|ai\|tui)`, `--fail-on` |
+| `analyze` | Audit schema dump, migrations dir, app code, Studio JSON, or live DB | `-s/--schema`, `-a/--app`, `-d/--db`, `--studio-json`, `--stats`, `-f/--format (terminal\|json\|markdown\|sql\|ai\|tui\|sarif)`, `--fail-on` |
 | `fix` | Generate transaction-safe SQL fixes (`CONCURRENTLY`, no `BEGIN`/`COMMIT`) | `-s/--schema`, `-d/--db`, `-a/--app`, `--out-dir`, `--dry-run` |
 | `pentest` | Transaction-rolled-back RLS probe as `anon` & `authenticated` | `-d/--db` (required), `-w/--writes`, `-f/--format (terminal\|json)` |
 | `prove` | Rolled-back `EXPLAIN (ANALYZE, BUFFERS)` query benchmark | `-d/--db` (required), `-l/--limit`, `-f/--format (terminal\|json)` |
@@ -219,6 +219,23 @@ Running `node packages/cli/dist/index.js analyze --schema sample/schema_dump_bro
 | `sql-query` | Print the single read-only Studio introspection SQL query | — |
 | `demo` | Run full-stack showcase against the preloaded broken SaaS snapshot | `-f/--format`, `-o/--out` |
 | `mcp` | Start stdio MCP server exposing `analyze_schema`, `scan_app_code`, `generate_safe_migration` | — |
+
+### SARIF export
+
+```bash
+sb-sniffer analyze --schema schema.sql --format sarif --out results.sarif
+```
+
+This writes SARIF 2.1.0, suitable for a subsequent `github/codeql-action/upload-sarif` step.
+Critical/high findings map to `error`, medium to `warning`, and info to `note`;
+the original severity and affected database objects are preserved in result properties.
+`--out` and `--fail-on` work as with the other report formats (the report is written before the gate exits).
+
+When analyzing a single SQL file alone, findings reference its absolute file URI, without invented line numbers.
+Upload from the same checkout (or configure the upload's source root) so GitHub can resolve that URI.
+Live databases, migration directories, Studio exports, app-code scans and schema-plus-statistics inputs retain logical object locations only,
+because findings do not carry reliable source-file/line mappings. They are valid SARIF, but do not promise
+[GitHub inline annotations](https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/sarif-support#source-file-locations).
 
 ### GitHub Actions CI Gate
 

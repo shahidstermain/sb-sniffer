@@ -3,12 +3,14 @@
 import { Command } from 'commander';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import {
   analyzeSnapshot,
   BROKEN_SUPABASE_PROJECT_SNAPSHOT,
   formatFixAllSql,
   formatReportMarkdown,
   formatReportForAI,
+  formatReportSarif,
   formatSafeMigrationSql,
   parseSchemaDump,
   parseStatStatements,
@@ -27,7 +29,7 @@ import { renderRlsPentestTerminal, runRlsPentest } from './rlsPentester.js';
 import { renderExplainProofTerminal, runExplainProof } from './explainProver.js';
 import { startMcpServer } from './mcpServer.js';
 
-const VALID_FORMATS = new Set(['terminal', 'json', 'markdown', 'sql', 'ai', 'tui']);
+const VALID_FORMATS = new Set(['terminal', 'json', 'markdown', 'sql', 'ai', 'tui', 'sarif']);
 const SEVERITY_LEVELS: Record<string, number> = { critical: 3, high: 2, medium: 1, info: 0 };
 
 function failCli(message: string): never {
@@ -51,7 +53,7 @@ program
   .option('-a, --app <dir>', 'Path to application codebase (.env, Next.js, Prisma, Drizzle) for Full-Stack App <-> DB correlation')
   .option('--stats <filePath>', 'Path to pg_stat_statements export (.json or .csv)')
   .option('--studio-json <filePath>', 'Path to Studio Introspection JSON dump')
-  .option('-f, --format <format>', 'Output format: terminal, json, markdown, sql, ai, tui', 'terminal')
+  .option('-f, --format <format>', 'Output format: terminal, json, markdown, sql, ai, tui, sarif', 'terminal')
   .option('-o, --out <outputPath>', 'Write output to file instead of stdout')
   .option('--fail-on <severity>', 'CI exit gate: fail if any finding meets or exceeds severity (critical, high, medium, info)')
   .action(async (options) => {
@@ -68,7 +70,8 @@ program
 
     try {
       if (options.db) {
-        console.log(`Connecting to database...`);
+        if (format === 'sarif') console.error('Connecting to database...');
+        else console.log('Connecting to database...');
         snapshot = await collectLiveSnapshot({ connectionString: options.db });
       } else if (options.studioJson) {
         const content = fs.readFileSync(path.resolve(options.studioJson), 'utf-8');
@@ -115,6 +118,13 @@ program
     let output = '';
     if (format === 'json') {
       output = JSON.stringify(report, null, 2);
+      if (options.out) fs.writeFileSync(options.out, output, 'utf-8');
+      else console.log(output);
+    } else if (format === 'sarif') {
+      const sourceUri = options.schema && !options.db && !options.studioJson && !options.app && !options.stats && fs.statSync(options.schema).isFile()
+        ? pathToFileURL(path.resolve(options.schema)).href
+        : undefined;
+      output = formatReportSarif(report, sourceUri);
       if (options.out) fs.writeFileSync(options.out, output, 'utf-8');
       else console.log(output);
     } else if (format === 'markdown') {

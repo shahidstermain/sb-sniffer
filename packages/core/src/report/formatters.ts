@@ -1,5 +1,54 @@
 import { DiagnosticFinding, DiagnosticReport, DiagnosticSnapshot } from '../types.js';
 
+/** Export SARIF without inventing source lines for database-level findings. */
+export function formatReportSarif(report: DiagnosticReport, sourceUri?: string): string {
+  const levels = { critical: 'error', high: 'error', medium: 'warning', info: 'note' } as const;
+  const rules = [...new Map(report.findings.map((finding) => [finding.id, finding])).values()];
+  const logicalLocations = (objects: DiagnosticFinding['affectedObjects']) => {
+    const locations = objects.map((object) => ({
+      name: object.name,
+      fullyQualifiedName: object.schema ? `${object.schema}.${object.name}` : object.name,
+      kind: object.type,
+    }));
+    // Multiple checks can reference the same object; SARIF requires unique locations.
+    return [...new Map(locations.map((location) => [JSON.stringify(location), location])).values()];
+  };
+
+  return JSON.stringify({
+    $schema: 'https://json.schemastore.org/sarif-2.1.0.json',
+    version: '2.1.0',
+    runs: [{
+      tool: { driver: {
+        name: 'sb-sniffer',
+        informationUri: 'https://github.com/shahidstermain/sb-sniffer',
+        rules: rules.map((finding) => ({
+          id: finding.id,
+          shortDescription: { text: finding.title },
+          ...(finding.documentationUrl ? { helpUri: finding.documentationUrl } : {}),
+        })),
+      } },
+      results: report.findings.map((finding) => ({
+        ruleId: finding.id,
+        level: levels[finding.severity],
+        message: { text: `${finding.title}: ${finding.summary}` },
+        ...(sourceUri || finding.affectedObjects.length ? {
+          locations: [{
+            ...(sourceUri ? { physicalLocation: { artifactLocation: { uri: sourceUri } } } : {}),
+            ...(finding.affectedObjects.length ? {
+              logicalLocations: logicalLocations(finding.affectedObjects),
+            } : {}),
+          }],
+        } : {}),
+        properties: {
+          severity: finding.severity,
+          category: finding.category,
+          affectedObjects: finding.affectedObjects,
+        },
+      })),
+    }],
+  }, null, 2);
+}
+
 export function formatReportMarkdown(report: DiagnosticReport): string {
   const { healthScore, grade, summary, findings } = report;
 
